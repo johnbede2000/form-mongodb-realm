@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
+import moment from 'moment';
 // import { alpha } from '@material-ui/core/styles';
 
 /*
@@ -39,8 +40,8 @@ function App() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // need to parse the Moment date object before sending to MongoDB
-    const gigObject = { ...gig, date: selectedDate, public: isChecked };
+    const stringDate = moment(selectedDate).format('YYYY-MM-DD');
+    const gigObject = { ...gig, date: stringDate, public: isChecked };
     console.log(gigObject);
   };
 
