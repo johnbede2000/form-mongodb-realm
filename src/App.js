@@ -3,6 +3,7 @@ import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
 import moment from 'moment';
 // import { alpha } from '@material-ui/core/styles';
+import * as Realm from 'realm-web';
 
 /*
 const classes = makeStyles((theme) => ({
@@ -14,6 +15,33 @@ const classes = makeStyles((theme) => ({
 */
 
 function App() {
+  const id = `${process.env.REACT_APP_REALM_APP_ID}`;
+  const config = {
+    id,
+  };
+  const app = new Realm.App(config);
+
+  async function loginEmailPassword(email, password) {
+    const credentials = Realm.Credentials.emailPassword(email, password);
+    const user = await app.logIn(credentials);
+    return user;
+  }
+  loginEmailPassword(
+    `${process.env.REACT_APP_USER}`,
+    `${process.env.REACT_APP_REALM_PASSWORD}`
+  )
+    .then((user) => {
+      console.log('Successfully logged in');
+    })
+    .catch((err) => console.log('Hi John ' + err));
+
+  const mongodb = app.currentUser.mongoClient('mongodb-atlas');
+  const myCollection = mongodb.db('gigs').collection('2021');
+  async function insertOne(obj) {
+    const result = await myCollection.insertOne(obj);
+    console.log(result);
+  }
+
   const [gig, setGig] = useState({
     venuename: '',
     bandname: '',
@@ -42,86 +70,90 @@ function App() {
     e.preventDefault();
     const stringDate = moment(selectedDate).format('YYYY-MM-DD');
     const gigObject = { ...gig, date: stringDate, public: isChecked };
-    console.log(gigObject);
+
+    // send gigObject
+    insertOne(gigObject);
   };
 
   return (
-    <MuiPickersUtilsProvider utils={MomentUtils}>
-      <form>
-        <div>
-          <DatePicker value={selectedDate} onChange={handleDateChange} />
-        </div>
-        <div>
-          <label htmlFor="venuename">Venue Name: </label>
-          <input
-            type="text"
-            id="venuename"
-            name="venuename"
-            onChange={handleChange}
-          ></input>
-        </div>
-        <div>
-          <label htmlFor="bandname">Band Name: </label>
-          <input
-            type="text"
-            id="bandname"
-            name="bandname"
-            onChange={handleChange}
-          ></input>
-        </div>
-        <div>
-          <label htmlFor="bandlink">Band Link: </label>
-          <input
-            type="text"
-            id="bandlink"
-            name="bandlink"
-            onChange={handleChange}
-          ></input>
-        </div>
-        <div>
-          <label htmlFor="city">City: </label>
-          <input
-            type="text"
-            id="city"
-            name="city"
-            onChange={handleChange}
-          ></input>
-        </div>
+    <>
+      <MuiPickersUtilsProvider utils={MomentUtils}>
+        <form>
+          <div>
+            <DatePicker value={selectedDate} onChange={handleDateChange} />
+          </div>
+          <div>
+            <label htmlFor="venuename">Venue Name: </label>
+            <input
+              type="text"
+              id="venuename"
+              name="venuename"
+              onChange={handleChange}
+            ></input>
+          </div>
+          <div>
+            <label htmlFor="bandname">Band Name: </label>
+            <input
+              type="text"
+              id="bandname"
+              name="bandname"
+              onChange={handleChange}
+            ></input>
+          </div>
+          <div>
+            <label htmlFor="bandlink">Band Link: </label>
+            <input
+              type="text"
+              id="bandlink"
+              name="bandlink"
+              onChange={handleChange}
+            ></input>
+          </div>
+          <div>
+            <label htmlFor="city">City: </label>
+            <input
+              type="text"
+              id="city"
+              name="city"
+              onChange={handleChange}
+            ></input>
+          </div>
 
-        <div>
-          <label htmlFor="link">Link for info / tickets: </label>
-          <input
-            type="text"
-            id="link"
-            name="link"
-            onChange={handleChange}
-          ></input>
-        </div>
-        <div>
-          <label htmlFor="desc">Description (e.g. musicians): </label>
-          <input
-            type="text"
-            id="desc"
-            name="desc"
-            onChange={handleChange}
-          ></input>
-        </div>
-        <div>
-          <label htmlFor="public">Public?</label>
-          <input
-            type="checkbox"
-            id="public"
-            name="public"
-            checked={isChecked}
-            onChange={handleCheckboxChange}
-          ></input>
-        </div>
+          <div>
+            <label htmlFor="link">Link for info / tickets: </label>
+            <input
+              type="text"
+              id="link"
+              name="link"
+              onChange={handleChange}
+            ></input>
+          </div>
+          <div>
+            <label htmlFor="desc">Description (e.g. musicians): </label>
+            <input
+              type="text"
+              id="desc"
+              name="desc"
+              onChange={handleChange}
+            ></input>
+          </div>
+          <div>
+            <label htmlFor="public">Public?</label>
+            <input
+              type="checkbox"
+              id="public"
+              name="public"
+              checked={isChecked}
+              onChange={handleCheckboxChange}
+            ></input>
+          </div>
 
-        <button type="submit" onClick={handleSubmit}>
-          Add Gig
-        </button>
-      </form>
-    </MuiPickersUtilsProvider>
+          <button type="submit" onClick={handleSubmit}>
+            Add Gig
+          </button>
+        </form>
+      </MuiPickersUtilsProvider>
+    </>
   );
 }
 
