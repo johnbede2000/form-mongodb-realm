@@ -26,6 +26,7 @@ function App() {
     const user = await app.logIn(credentials);
     return user;
   }
+  // it's logging in with every re-render?
   loginEmailPassword(
     `${process.env.REACT_APP_USER}`,
     `${process.env.REACT_APP_REALM_PASSWORD}`
@@ -69,7 +70,7 @@ function App() {
   const handleSubmit = (e) => {
     e.preventDefault();
     const stringDate = moment(selectedDate).format('YYYY-MM-DD');
-    const gigObject = { ...gig, date: ISODate(stringDate), public: isChecked };
+    const gigObject = { ...gig, date: new Date(stringDate), public: isChecked };
 
     // send gigObject
     insertOne(gigObject);
