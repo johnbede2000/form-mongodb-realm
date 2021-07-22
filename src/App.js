@@ -69,7 +69,7 @@ function App() {
   const handleSubmit = (e) => {
     e.preventDefault();
     const stringDate = moment(selectedDate).format('YYYY-MM-DD');
-    const gigObject = { ...gig, date: stringDate, public: isChecked };
+    const gigObject = { ...gig, date: ISODate(stringDate), public: isChecked };
 
     // send gigObject
     insertOne(gigObject);
