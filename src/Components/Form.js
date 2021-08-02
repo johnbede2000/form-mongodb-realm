@@ -18,8 +18,17 @@ const Form = ({ app }) => {
   const myCollection = mongodb.db('gigs').collection('2021');
 
   async function insertOne(obj) {
-    const result = await myCollection.insertOne(obj);
-    console.log(result);
+    await myCollection.insertOne(obj);
+    setGig({
+      venuename: '',
+      bandname: '',
+      bandlink: '',
+      city: '',
+      desc: '',
+      link: '',
+      public: true,
+    });
+    alert('Success');
   }
 
   const [gig, setGig] = useState({
