@@ -19,15 +19,6 @@ const Form = ({ app }) => {
 
   async function insertOne(obj) {
     await myCollection.insertOne(obj);
-    setGig({
-      venuename: '',
-      bandname: '',
-      bandlink: '',
-      city: '',
-      desc: '',
-      link: '',
-      public: true,
-    });
     alert('Success');
   }
 
