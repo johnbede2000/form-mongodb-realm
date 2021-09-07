@@ -29,7 +29,6 @@ const Form = ({ app }) => {
     city: '',
     desc: '',
     link: '',
-    tickets: false,
   });
 
   const handleChange = (e) => {
@@ -52,7 +51,7 @@ const Form = ({ app }) => {
     const gigObject = {
       ...gig,
       date: new Date(`${stringDate}T23:59:59`),
-      public: isChecked,
+      tickets: isChecked,
     };
 
     // send gigObject
