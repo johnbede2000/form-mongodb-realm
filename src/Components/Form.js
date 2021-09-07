@@ -29,7 +29,7 @@ const Form = ({ app }) => {
     city: '',
     desc: '',
     link: '',
-    public: true,
+    tickets: false,
   });
 
   const handleChange = (e) => {
@@ -40,7 +40,7 @@ const Form = ({ app }) => {
 
   const [selectedDate, handleDateChange] = useState(new Date());
 
-  const [isChecked, setIsChecked] = useState(true);
+  const [isChecked, setIsChecked] = useState(false);
 
   const handleCheckboxChange = () => {
     setIsChecked((prevCheck) => !prevCheck);
@@ -49,7 +49,11 @@ const Form = ({ app }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const stringDate = moment(selectedDate).format('YYYY-MM-DD');
-    const gigObject = { ...gig, date: new Date(stringDate), public: isChecked };
+    const gigObject = {
+      ...gig,
+      date: new Date(`${stringDate}T23:59:59`),
+      public: isChecked,
+    };
 
     // send gigObject
     insertOne(gigObject);
@@ -119,11 +123,11 @@ const Form = ({ app }) => {
             ></input>
           </div>
           <div>
-            <label htmlFor="public">Public?</label>
+            <label htmlFor="public">Tickets?</label>
             <input
               type="checkbox"
-              id="public"
-              name="public"
+              id="tickets"
+              name="tickets"
               checked={isChecked}
               onChange={handleCheckboxChange}
             ></input>
